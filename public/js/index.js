@@ -25,6 +25,9 @@ window.onload = function() {
 var dhttp = new XMLHttpRequest();
 
 var listedDomains = [];
+var unregisteredDevices = [];
+var deviceCount = 0;
+var reportDownloadCount = 0;
 
 const pullDomains= function() {
     dhttp.open("POST", 'https://api.crexendovip.com/ns-api/?object=domain&action=read');
@@ -105,6 +108,11 @@ const startRequest = function(reqBody) {
     }
 }
 
+const isNumber = function(ext) {
+    const extPattern = /^\d+$/.test(ext);
+    return extPattern;
+}
+
 const readResponse = function (xmlParent) {
     console.log(xmlParent);
     for (i=0; i<xmlParent.length; i++) {
@@ -130,7 +138,46 @@ const readResponse = function (xmlParent) {
         // let model = xmlParent[i].getElementsByTagName("model").textContent || xmlParent[i].getElementsByTagName("user_agent").textContent;
 
         console.log(`Domain: ${domain} \n Subscriber: ${sub_login} \n Mac: ${mac} \n Model: ${model} \n User: ${aorUser}`); 
+
+        if (isNumber(aorUser)) {
+            let singleDevice = {
+                "Domain": `${domain}`,
+                "Subscriber": `${sub_login}`,
+                "Mac": `${mac}`,
+                "Model": `${model}`
+            }
+
+            unregisteredDevices.push(singleDevice);
+        }
     }
+
+    generateCSV(unregisteredDevices);
+}
+
+const generateCSV = function (devicesToCSV) {
+    var csvHeaders = Object.keys(devicesToCSV[0]).toString();
+    console.log(csvHeaders);
+    
+    var csvData = devicesToCSV.map((item) => {
+        return Object.values(item).toString();
+    });
+
+    var csv = [csvHeaders, ...csvData].join('\n');
+    downloadCSV(csv);
+};
+
+const downloadCSV = function(csv) {
+    const csvBlob = new Blob([csv], { type: 'application/csv' });
+    const url = URL.createObjectURL(csvBlob);
+    var csvAnchor = document.createElement('a');
+    csvAnchor.download = 'unregistered-devices.csv';
+    csvAnchor.href = url;
+    csvAnchor.style.display = 'none';
+
+    document.body.appendChild(csvAnchor);
+    csvAnchor.click();
+    csvAnchor.remove();
+    URL.revokeObjectURL(url);
 }
 
 runReport.addEventListener("click", (e) => {
