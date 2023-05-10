@@ -87,8 +87,9 @@ const parseCheckedValues = function() {
 const requestCheckedDomains = function(checkedDomainValues) {
     for (i=0; i< checkedDomainValues.length; i++) {
         let reqBody = `{"domain": "${checkedDomainValues[i]}", "mode":"unregistered_endpoint"}`;
+        let unknownReqBody = `{"domain": "${checkedDomainValues[i]}", "mode": "unknown"}`;
         startRequest(reqBody);
-        requestCount++;
+        startRequest(unknownReqBody);
     }
 }
 
@@ -97,6 +98,7 @@ const startRequest = function(reqBody) {
     uhttp.open('POST', "https://api.crexendovip.com/ns-api/?object=device&action=read");
     uhttp.setRequestHeader("Authorization", `Bearer ${ns_access}`);
     uhttp.send(reqBody);
+    requestCount++;
 
     uhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
