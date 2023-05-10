@@ -26,7 +26,8 @@ var dhttp = new XMLHttpRequest();
 
 var listedDomains = [];
 var unregisteredDevices = [];
-var deviceCount = 0;
+var requestCount = 0;
+var responseCount = 0;
 var reportDownloadCount = 0;
 
 const pullDomains= function() {
@@ -87,6 +88,7 @@ const requestCheckedDomains = function(checkedDomainValues) {
     for (i=0; i< checkedDomainValues.length; i++) {
         let reqBody = `{"domain": "${checkedDomainValues[i]}", "mode":"unregistered_endpoint"}`;
         startRequest(reqBody);
+        requestCount++;
     }
 }
 
@@ -138,7 +140,6 @@ const readResponse = function (xmlParent) {
         // let model = xmlParent[i].getElementsByTagName("model").textContent || xmlParent[i].getElementsByTagName("user_agent").textContent;
 
         console.log(`Domain: ${domain} \n Subscriber: ${sub_login} \n Mac: ${mac} \n Model: ${model} \n User: ${aorUser}`); 
-
         if (isNumber(aorUser)) {
             let singleDevice = {
                 "Domain": `${domain}`,
@@ -151,10 +152,13 @@ const readResponse = function (xmlParent) {
         }
     }
 
+    responseCount++;
     generateCSV(unregisteredDevices);
 }
 
 const generateCSV = function (devicesToCSV) {
+    // TO DO:: ADD REQUESTCOUNT AND RESPONSECOUNT TO THIS SO FUNCTION ONLY RUNS ONCE NUMBERS MATCH. MAY NEED TO MOVE WHERE COUNTERS ARE
+    console.log('responseCount = ' + responseCount + ' requestCount = ' + requestCount + ' and reportDownloadCount = ' + reportDownloadCount);
     var csvHeaders = Object.keys(devicesToCSV[0]).toString();
     console.log(csvHeaders);
     
@@ -163,10 +167,14 @@ const generateCSV = function (devicesToCSV) {
     });
 
     var csv = [csvHeaders, ...csvData].join('\n');
-    downloadCSV(csv);
+
+    if (requestCount == responseCount && reportDownloadCount == 0) {
+        downloadCSV(csv);
+    }
 };
 
 const downloadCSV = function(csv) {
+    reportDownloadCount++;
     const csvBlob = new Blob([csv], { type: 'application/csv' });
     const url = URL.createObjectURL(csvBlob);
     var csvAnchor = document.createElement('a');
