@@ -24,8 +24,6 @@ window.onload = function() {
 
 var dhttp = new XMLHttpRequest();
 
-var uhttp = new XMLHttpRequest();
-
 var listedDomains = [];
 
 const pullDomains= function() {
@@ -90,31 +88,48 @@ const requestCheckedDomains = function(checkedDomainValues) {
 }
 
 const startRequest = function(reqBody) {
+    var uhttp = new XMLHttpRequest();
     uhttp.open('POST', "https://api.crexendovip.com/ns-api/?object=device&action=read");
     uhttp.setRequestHeader("Authorization", `Bearer ${ns_access}`);
     uhttp.send(reqBody);
-}
 
-uhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        console.log(uhttp.responseXML);
-        let parentNode = uhttp.responseXML.getElementsByTagName("device");
-        readResponse(parentNode);
-        // let subscriber_domain = parentNode[0].getElementsByTagName("subscriber_domain").textContent;
-    } else {
-        //console.log(this.responseText);
+    uhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(uhttp.responseXML);
+            let parentNode = uhttp.responseXML.getElementsByTagName("device");
+            readResponse(parentNode);
+            // let subscriber_domain = parentNode[0].getElementsByTagName("subscriber_domain").textContent;
+        } else {
+            //console.log(this.responseText);
+        }
     }
 }
 
 const readResponse = function (xmlParent) {
     console.log(xmlParent);
     for (i=0; i<xmlParent.length; i++) {
-        let domain = xmlParent[i].getElementsByTagName("subscriber_domain").textContent;
+        let aor = xmlParent[i].childNodes[1].textContent;
+        let indexOfSip = aor.indexOf(":");
+        let indexOfUser = aor.indexOf("@");
+        let aorUser = aor.slice((indexOfSip + 1), indexOfUser);
+        let domain = xmlParent[i].childNodes[7].textContent;
+        let sub_login = xmlParent[i].childNodes[16].textContent;
+        let mac = "";
+        let model = "";
+        if (xmlParent[i].lastChild.nodeName == "ndperror") {
+            mac = "-";
+            model = "-";
+        }
+
+        if (xmlParent[i].lastChild.nodeName == "line") {
+            mac = xmlParent[i].lastChild.previousSibling.previousSibling.previousSibling.previousSibling.textContent;
+            model = xmlParent[i].lastChild.previousSibling.previousSibling.previousSibling.textContent;
+        }
         // let login = xmlParent[i].getElementsByTagName("sub_login").textContent;
         // let mac = xmlParent[i].getElementsByTagName("mac").textContent || "";
         // let model = xmlParent[i].getElementsByTagName("model").textContent || xmlParent[i].getElementsByTagName("user_agent").textContent;
 
-        console.log(`${domain}`); // TO DO :: THIS IS RETURNING UNDEFINED IN CONSOLE. FIX
+        console.log(`Domain: ${domain} \n Subscriber: ${sub_login} \n Mac: ${mac} \n Model: ${model} \n User: ${aorUser}`); 
     }
 }
 
