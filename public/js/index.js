@@ -156,6 +156,48 @@ const readResponse = function (xmlParent) {
 
     responseCount++;
     generateCSV(unregisteredDevices);
+    generateNewWindow(unregisteredDevices);
+}
+
+const generateNewWindow = function(unregDeviceArray) {
+    let newWindowHead = 
+    `
+    <!DOCTYPE html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Unregistered Devices" />
+        <meta name="author" content="CrexendoVIP Archer Nicholson VoIP Engineer" />
+        <title>Unregistered Device Report</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+    `;
+
+    for (i=0;i<unregDeviceArray.length; i++) {
+        let unregDomain = unregDeviceArray[i].Domain;
+        let unregSubscriber = unregDeviceArray[i].Subscriber;
+        let unregMac = unregDeviceArray[i].Mac;
+        let unregModel = unregDeviceArray[i].Model;
+
+        let appendToWindow = `
+        <div class="card text-break">
+        <div class="card-body">
+            <p class="text-start fs-4 fw-bold" style="font-weight:800;">${unregDomain}</p>
+            <p class="fs-2 fw-bold" style="font-weight:600;">Subscriber: <span style="font-weight:400;">${unregSubscriber}</span> <br/> Mac Address: <span style="font-weight:400;">${unregMac}</span> <br/> Device Model: <span style="font-weight:400;">${unregModel}</span></p>
+        </div>
+        </div> <br />
+        `;
+
+        newWindowHead += appendToWindow;
+
+        // console.log(newWindowHead);
+    }
+
+    if (reportDownloadCount == 1) {
+        var win = window.open("", "_blank");
+        win.document.body.innerHTML = newWindowHead;
+    }
+    
 }
 
 const generateCSV = function (devicesToCSV) {
