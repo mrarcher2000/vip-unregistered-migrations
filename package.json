@@ -1,0 +1,30 @@
+{
+  "name": "vip-unregistered-migrations",
+  "version": "1.0.0",
+  "description": "For use by internal Crexendo Employees for checking unregistered devices",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrarcher2000/vip-unregistered-migrations.git"
+  },
+  "keywords": [
+    "crexendo",
+    "crexendovip",
+    "voip"
+  ],
+  "author": "Archer Nicholson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrarcher2000/vip-unregistered-migrations/issues"
+  },
+  "homepage": "https://github.com/mrarcher2000/vip-unregistered-migrations#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3"
+  }
+}
