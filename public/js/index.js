@@ -2,6 +2,8 @@ const domainListElement = document.querySelector('#domainList');
 const pleaseWaitElement = document.querySelector('#loadDomainList');
 const submitDiv = document.querySelector('#submitdiv');
 const runReport = document.querySelector('#runReport');
+const errorMessage = document.querySelector('#errorMessage');
+const successMessage = document.querySelector('#successMessage');
 
 
 let ns_access = "";
@@ -105,6 +107,8 @@ const startRequest = function(reqBody) {
             console.log(uhttp.responseXML);
             let parentNode = uhttp.responseXML.getElementsByTagName("device");
             readResponse(parentNode);
+            errorMessage.style.display = "none";
+            successMessage.style.display = "inline";
             // let subscriber_domain = parentNode[0].getElementsByTagName("subscriber_domain").textContent;
         } else {
             //console.log(this.responseText);
@@ -118,6 +122,10 @@ const isNumber = function(ext) {
 }
 
 const readResponse = function (xmlParent) {
+    if (!xmlParent) {
+        errorMessage.style.display = "inline";
+        successMessage.style.display = "none";
+    }
     console.log(xmlParent);
     for (i=0; i<xmlParent.length; i++) {
         let aor = xmlParent[i].childNodes[1].textContent;
@@ -225,7 +233,13 @@ const generateCSV = function (devicesToCSV) {
     var csv = [csvHeaders, ...csvData].join('\n');
 
     if (requestCount == responseCount && reportDownloadCount == 0) {
-        downloadCSV(csv);
+        try{
+            downloadCSV(csv);
+        } catch (e) {
+            console.log(e);
+            errorMessage.style.display = "inline";
+            successMessage.style.display = "none";
+        }
     }
 };
 

@@ -1,0 +1,33 @@
+body {
+    padding: 5px;
+    background-color:#0080BE;
+    color: white;
+}
+
+section {
+    margin:10px;
+    padding: 5px;
+    background-color: white;
+    color: #919191;
+}
+
+h2.title {
+    font-weight: 600;
+    color: black;
+}
+
+h4.subheaderSubmit {
+    font-weight: 500;
+    color: #999999;
+}
+
+button.btn-submit-report {
+    background-color:#0080BE;
+    color: white;
+    padding: 5px 10px;
+}
+
+.form-check-input:checked + .form-check-label {
+    color:black;
+    font-weight: 500;
+}
