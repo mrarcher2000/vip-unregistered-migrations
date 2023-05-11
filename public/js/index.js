@@ -171,6 +171,17 @@ const generateNewWindow = function(unregDeviceArray) {
         <title>Unregistered Device Report</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Domain</th>
+                <th scope="col">Subscriber</th>
+                <th scope="col">Mac Address</th>
+                <th scope="col">Device Model</th>
+            </tr>
+        </thead>
+        <tbody>
+
     `;
 
     for (i=0;i<unregDeviceArray.length; i++) {
@@ -180,12 +191,12 @@ const generateNewWindow = function(unregDeviceArray) {
         let unregModel = unregDeviceArray[i].Model;
 
         let appendToWindow = `
-        <div class="card text-break">
-        <div class="card-body">
-            <p class="text-start fs-4 fw-bold" style="font-weight:800;">${unregDomain}</p>
-            <p class="fs-2 fw-bold" style="font-weight:600;">Subscriber: <span style="font-weight:400;">${unregSubscriber}</span> <br/> Mac Address: <span style="font-weight:400;">${unregMac}</span> <br/> Device Model: <span style="font-weight:400;">${unregModel}</span></p>
-        </div>
-        </div> <br />
+        <tr>
+            <td>${unregDomain}</td>
+            <td>${unregSubscriber}</td>
+            <td>${unregMac}</td>
+            <td>${unregModel}</td>
+        </tr>
         `;
 
         newWindowHead += appendToWindow;
@@ -195,7 +206,8 @@ const generateNewWindow = function(unregDeviceArray) {
 
     if (reportDownloadCount == 1) {
         var win = window.open("", "_blank");
-        win.document.body.innerHTML = newWindowHead;
+        win.document.body.innerHTML = (newWindowHead + `</tbody></table>`);
+        setTimeout(pageReset, 5000);
     }
     
 }
@@ -230,6 +242,16 @@ const downloadCSV = function(csv) {
     csvAnchor.click();
     csvAnchor.remove();
     URL.revokeObjectURL(url);
+}
+
+const pageReset = function() {
+    if (reportDownloadCount == 1) {
+        unregisteredDevices = [];
+        requestCount = 0;
+        responseCount = 0;
+        reportDownloadCount = 0;
+        console.log(`Page has been reset. \n Devices: ${unregisteredDevices} \n reportDownloadCount = ${reportDownloadCount}`);
+    }
 }
 
 runReport.addEventListener("click", (e) => {
