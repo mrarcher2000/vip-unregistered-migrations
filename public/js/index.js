@@ -5,6 +5,7 @@ const runReport = document.querySelector('#runReport');
 const errorMessage = document.querySelector('#errorMessage');
 const successMessage = document.querySelector('#successMessage');
 const noDataMessage = document.querySelector('#noDataMessage');
+const scrollTop = document.querySelector('#scrollTop');
 
 
 let ns_access = "";
@@ -23,6 +24,19 @@ window.onload = function() {
             alert('Server Connection Unsuccessful! Please try again later');
         }
     });
+}
+
+window.onscroll = function() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollTop.style.display = "block";
+    } else {
+        scrollTop.style.display = "none";
+    }
+}
+
+const scrollToTop = function () {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 
 var dhttp = new XMLHttpRequest();
@@ -281,4 +295,9 @@ const pageReset = function() {
 runReport.addEventListener("click", (e) => {
     e.preventDefault();
     parseCheckedValues();
+});
+
+scrollTop.addEventListener("click", (e) => {
+    e.preventDefault();
+    scrollToTop();
 })
