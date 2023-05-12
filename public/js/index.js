@@ -4,6 +4,7 @@ const submitDiv = document.querySelector('#submitdiv');
 const runReport = document.querySelector('#runReport');
 const errorMessage = document.querySelector('#errorMessage');
 const successMessage = document.querySelector('#successMessage');
+const noDataMessage = document.querySelector('#noDataMessage');
 
 
 let ns_access = "";
@@ -109,6 +110,7 @@ const startRequest = function(reqBody) {
             readResponse(parentNode);
             errorMessage.style.display = "none";
             successMessage.style.display = "inline";
+            noDataMessage.style.display = "none";
             // let subscriber_domain = parentNode[0].getElementsByTagName("subscriber_domain").textContent;
         } else {
             //console.log(this.responseText);
@@ -125,6 +127,7 @@ const readResponse = function (xmlParent) {
     if (!xmlParent) {
         errorMessage.style.display = "inline";
         successMessage.style.display = "none";
+        noDataMessage.style.display = "none";
     }
     console.log(xmlParent);
     for (i=0; i<xmlParent.length; i++) {
@@ -223,6 +226,13 @@ const generateNewWindow = function(unregDeviceArray) {
 const generateCSV = function (devicesToCSV) {
     // TO DO:: ADD REQUESTCOUNT AND RESPONSECOUNT TO THIS SO FUNCTION ONLY RUNS ONCE NUMBERS MATCH. MAY NEED TO MOVE WHERE COUNTERS ARE
     console.log('responseCount = ' + responseCount + ' requestCount = ' + requestCount + ' and reportDownloadCount = ' + reportDownloadCount);
+    console.log(devicesToCSV);
+    if (devicesToCSV.length == 0) {
+        console.log(`No devices showing unregistered in request. \n ${devicesToCSV}`);
+        noDataMessage.style.display = "inline";
+        errorMessage.style.display = "none";
+        successMessage.style.display = "none";
+    }
     var csvHeaders = Object.keys(devicesToCSV[0]).toString();
     console.log(csvHeaders);
     
