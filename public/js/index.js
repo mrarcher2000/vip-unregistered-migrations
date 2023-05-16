@@ -150,7 +150,8 @@ const readResponse = function (xmlParent) {
         let indexOfUser = aor.indexOf("@");
         let aorUser = aor.slice((indexOfSip + 1), indexOfUser);
         let domain = xmlParent[i].childNodes[7].textContent;
-        let sub_login = xmlParent[i].childNodes[16].textContent;
+        // let sub_login = xmlParent[i].childNodes[16].textContent;
+        let sub_login = "-";
         let mac = "";
         let model = "";
         if (xmlParent[i].lastChild.nodeName == "ndperror") {
@@ -161,6 +162,14 @@ const readResponse = function (xmlParent) {
         if (xmlParent[i].lastChild.nodeName == "line") {
             mac = xmlParent[i].lastChild.previousSibling.previousSibling.previousSibling.previousSibling.textContent;
             model = xmlParent[i].lastChild.previousSibling.previousSibling.previousSibling.textContent;
+        }
+        try {
+            if (xmlParent[i].childNodes[16].nodeName == "sub_login") {
+                sub_login = xmlParent[i].childNodes[16].textContent;
+            }
+        } catch (error) {
+            console.error(error);
+            continue;
         }
         // let login = xmlParent[i].getElementsByTagName("sub_login").textContent;
         // let mac = xmlParent[i].getElementsByTagName("mac").textContent || "";
