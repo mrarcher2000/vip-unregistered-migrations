@@ -10,6 +10,28 @@
         <link rel="stylesheet" href="assets/index.css"/>
     </head>
 
+
+    <div class="modal fade bg-light" data-bs-keyboard="false" data-bs-backdrop="static" id="modalLoginForm" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLoginLabel">Login</h5>
+            </div>
+            <div class="modal-body" style="pointer-events:auto">
+                <form id="loginForm">
+                    <div>
+                        <label for="loginFormUser" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="loginFormUser" placeholder="Extension@Domain">
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginFormPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginFormPassword" placeholder="Password">
+                    </div>
+                    <a href="#" type="button" id="loginFormSubmit" class="btn btn-primary mb-3">Submit</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <body style="padding: 5px;">
         <section>
             <div id="titleheader">
